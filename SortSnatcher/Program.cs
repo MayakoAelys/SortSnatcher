@@ -41,6 +41,7 @@ namespace SortSnatcher
             Console.WriteLine("Config: ");
             Console.WriteLine($"    DirectoryPath: { _configSnatcher.DirectoryPath }");
             Console.WriteLine($"    DryRun: {_configSnatcher.DryRun}");
+            Console.WriteLine($"    OverwriteFiles: {_configSnatcher.OverwriteFiles}");
             Console.WriteLine("    Tags:");
 
             foreach (var tag in _configSnatcher.Tags)
@@ -201,8 +202,17 @@ namespace SortSnatcher
 
                 if (!dryRun)
                 {
-                    File.Move(jsonOldPath, jsonNewPath);
-                    File.Move(imageOldPath, imageNewPath);
+                    var targetJsonFileInfo = new FileInfo(jsonNewPath);
+                    var targetImageFileInfo = new FileInfo(imageOldPath);
+                    
+                    if (!_configSnatcher.OverwriteFiles && (targetJsonFileInfo.Exists || targetImageFileInfo.Exists))
+                    {
+                        Console.WriteLine($"    { dryRunTag } Image or JSON file exists, skipping");
+                        continue;
+                    }
+
+                    File.Move(jsonOldPath, jsonNewPath, overwrite: true);
+                    File.Move(imageOldPath, imageNewPath, overwrite: true);
                 }
 
                 Console.WriteLine($"    ! { dryRunTag } Files moved");

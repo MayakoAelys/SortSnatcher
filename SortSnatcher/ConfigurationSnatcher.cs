@@ -11,6 +11,10 @@
         /// </summary>
         public bool DryRun { get; set; }
         /// <summary>
+        /// True: Overwrite files in target folder, false: won't do anything
+        /// </summary>
+        public bool OverwriteFiles { get; set; }
+        /// <summary>
         /// Booru tag - Directory name
         /// </summary>
         public Dictionary<string, string> Tags { get; set; }
